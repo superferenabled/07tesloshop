@@ -1,9 +1,10 @@
+import {CustomJumbotron} from "@/shop/components/CustomJumbotron.tsx";
 
 
 export const HomePage = () => {
     return (
-        <div>
-            <h1>Home Page</h1>
-        </div>
+        <>
+            <CustomJumbotron title="Todos los productos" />
+        </>
     );
 };
