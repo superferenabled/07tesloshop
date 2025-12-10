@@ -1,10 +1,25 @@
 import {Outlet} from "react-router";
+import {useState} from "react";
+import {AdminHeader} from "@/admin/components/AdminHeader.tsx";
+import {AdminSidebar} from "@/admin/components/AdminSidebar.tsx";
 
 export const AdminLayout = () => {
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     return (
-        <div>
-            <h1>Admin Product</h1>
-            <Outlet />
+        <div className="min-h-screen bg-gray-50 flex">
+            <AdminSidebar
+                isCollapsed={sidebarCollapsed}
+                onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+            />
+
+            <div className="flex-1 flex flex-col">
+                <AdminHeader/>
+
+                <main className="flex-1 p-6">
+                    <Outlet/>
+                </main>
+            </div>
+
         </div>
     );
 };

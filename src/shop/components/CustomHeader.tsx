@@ -1,12 +1,12 @@
 import {Button} from "@/components/ui/button.tsx";
 import {Input} from "@/components/ui/input.tsx";
-import {Menu, Search} from "lucide-react";
+import {Search} from "lucide-react";
 import {useRef} from "react";
 import {Link, useParams, useSearchParams} from "react-router";
 import {cn} from "@/lib/utils.ts";
 import {CustomLogo} from "@/components/custom/CustomLogo.tsx";
 
-export const CustomHeader = () => {
+const CustomHeader = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const {gender} = useParams();
@@ -96,3 +96,4 @@ export const CustomHeader = () => {
         </header>
     );
 };
+export default CustomHeader
