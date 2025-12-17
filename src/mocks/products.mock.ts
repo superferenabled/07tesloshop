@@ -5,17 +5,7 @@ import greySweatshirt from "@/assets/product-grey-sweatshirt.jpg";
 import blackJacket from "@/assets/product-black-jacket.jpg";
 import whiteCap from "@/assets/product-white-cap.jpg";
 import blackBackpack from "@/assets/product-black-backpack.jpg";
-
-export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
-    description: string;
-    sizes: string[];
-    colors: string[];
-}
+import type {Product} from "@/interfaces/product.interface.ts";
 
 export const products: Product[] = [
     {
