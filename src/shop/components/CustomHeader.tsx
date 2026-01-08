@@ -10,7 +10,6 @@ const CustomHeader = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const {gender} = useParams();
-    console.log({gender});
 
     const inputRef = useRef<HTMLInputElement>(null);
     const query = searchParams.get('query') || '';
@@ -47,9 +46,9 @@ const CustomHeader = () => {
                             gender === 'men' ? 'underline underline-offset-4' : '')}>
                             Hombres
                         </Link>
-                        <Link to="/gender/woman"
+                        <Link to="/gender/women"
                               className={cn(`text-sm font-medium transition-colors hover:text-primary`,
-                                  gender === 'woman' ? 'underline underline-offset-4' : '')}>
+                                  gender === 'women' ? 'underline underline-offset-4' : '')}>
                             Mujeres
                         </Link>
                         <Link to="/gender/kid" className={cn(`text-sm font-medium transition-colors hover:text-primary`,

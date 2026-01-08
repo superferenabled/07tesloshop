@@ -6,11 +6,12 @@ import {useProducts} from "@/shop/hooks/useProducts.tsx";
 
 export const HomePage = () => {
     const {data} = useProducts();
+    console.log(data);
     return (
         <>
             <CustomJumbotron title="Todos los productos"/>
             <ProductsGrid products={data?.products || []}/>
-            <CustomPagination totalPages={data?.pages || 0}/>
+            <CustomPagination totalPages={data?.pages || 1}/>
         </>
     );
 };
