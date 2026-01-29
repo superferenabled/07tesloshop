@@ -1,15 +1,17 @@
-import {Button} from "@/components/ui/button.tsx";
-import {Input} from "@/components/ui/input.tsx";
-import {Search} from "lucide-react";
-import {useRef} from "react";
-import {Link, useParams, useSearchParams} from "react-router";
-import {cn} from "@/lib/utils.ts";
-import {CustomLogo} from "@/components/custom/CustomLogo.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Search } from "lucide-react";
+import { useRef, type KeyboardEvent } from "react";
+import { Link, useParams, useSearchParams } from "react-router";
+import { cn } from "@/lib/utils.ts";
+import { CustomLogo } from "@/components/custom/CustomLogo.tsx";
+import { useAuthStore } from "@/auth/store/auth.store";
 
 const CustomHeader = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const {gender} = useParams();
+    const { authStatus, isAdmin, logout } = useAuthStore();
+    const { gender } = useParams();
 
     const inputRef = useRef<HTMLInputElement>(null);
     const query = searchParams.get('query') || '';
@@ -47,8 +49,8 @@ const CustomHeader = () => {
                             Hombres
                         </Link>
                         <Link to="/gender/women"
-                              className={cn(`text-sm font-medium transition-colors hover:text-primary`,
-                                  gender === 'women' ? 'underline underline-offset-4' : '')}>
+                            className={cn(`text-sm font-medium transition-colors hover:text-primary`,
+                                gender === 'women' ? 'underline underline-offset-4' : '')}>
                             Mujeres
                         </Link>
                         <Link to="/gender/kid" className={cn(`text-sm font-medium transition-colors hover:text-primary`,
@@ -62,7 +64,7 @@ const CustomHeader = () => {
                         <div className="hidden md:flex items-center space-x-2">
                             <div className="relative">
                                 <Search
-                                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"/>
+                                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                     placeholder="Buscar productos..."
                                     className="pl-9 w-64 h-9 bg-white"
@@ -74,20 +76,32 @@ const CustomHeader = () => {
                         </div>
 
                         <Button variant="ghost" size="icon" className="md:hidden">
-                            <Search className="h-5 w-5"/>
+                            <Search className="h-5 w-5" />
                         </Button>
 
-                        <Link to="/auth/login">
-                            <Button variant="default" size="sm" className="ml-2">
-                                Login
-                            </Button>
-                        </Link>
+                        {
+                            authStatus === 'unauthenticated' ? (
+                                <Link to="/auth/login">
+                                    <Button variant="default" size="sm" className="ml-2">
+                                        Login
+                                    </Button>
+                                </Link>
 
-                        <Link to="/admin">
-                            <Button variant="destructive" size="sm" className="ml-2">
-                                Admin
-                            </Button>
-                        </Link>
+                            ) : (
+                                <Button onClick={logout} variant="outline" size="sm" className="ml-2">
+                                    Cerrar sesión
+                                </Button>
+                            )
+                        }
+
+                        {isAdmin() &&
+                            (<Link to="/admin">
+                                <Button variant="destructive" size="sm" className="ml-2">
+                                    Admin
+                                </Button>
+                            </Link>)
+                        }
+
 
                     </div>
                 </div>

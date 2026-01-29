@@ -2,23 +2,52 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {CustomLogo} from "@/components/custom/CustomLogo.tsx";
-import { Link } from "react-router"
+import { CustomLogo } from "@/components/custom/CustomLogo.tsx";
+import { Link, useNavigate } from "react-router"
+import { type FormEvent, useState } from "react";
+import { toast } from "sonner";
+import { useAuthStore } from "@/auth/store/auth.store";
 
 export const LoginPage = () => {
+
+    const navigate = useNavigate();
+
+    const { login } = useAuthStore();
+
+
+    const [isPosting, setIsPosting] = useState<boolean>(false);
+
+    const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setIsPosting(true);
+        const formData = new FormData(event.target as HTMLFormElement);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        const isValid = await login(email, password);
+        if (isValid) {
+            navigate('/');
+            return;
+        }
+        toast.error("Correo y/o conraseña no validos");
+        setIsPosting(false);
+    }
+
+
     return (
         <div className="flex flex-col gap-6">
             <Card className="overflow-hidden p-0">
                 <CardContent className="grid p-0 md:grid-cols-2">
-                    <form className="p-6 md:p-8">
+                    <form className="p-6 md:p-8" onSubmit={handleLogin}>
                         <div className="flex flex-col gap-6">
                             <div className="flex flex-col items-center text-center">
                                 <CustomLogo />
-                                <p className="text-balance text-muted-foreground">Ingrese a nuestra aplicaci&oacute;n</p>
+                                <p className="text-balance text-muted-foreground">Ingrese a nuestra
+                                    aplicaci&oacute;n</p>
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Correo</Label>
-                                <Input id="email" type="email" placeholder="mail@ejemplo.com" required />
+                                <Input id="email" type="email" name="email" placeholder="mail@ejemplo.com" required />
                             </div>
                             <div className="grid gap-2">
                                 <div className="flex items-center">
@@ -27,13 +56,15 @@ export const LoginPage = () => {
                                         ¿Olvidaste tu contrase&ntilde;a?
                                     </a>
                                 </div>
-                                <Input id="password" type="password" required placeholder="Contrase&ntilde;a"  />
+                                <Input id="password" type="password" name="password" required placeholder="Contrase&ntilde;a" />
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button disabled={isPosting} type="submit" className="w-full">
                                 Ingresar
                             </Button>
-                            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                                <span className="relative z-10 bg-background px-2 text-muted-foreground">O continuar con</span>
+                            <div
+                                className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                                <span
+                                    className="relative z-10 bg-background px-2 text-muted-foreground">O continuar con</span>
                             </div>
                             <div className="grid grid-cols-3 gap-4">
                                 <Button variant="outline" className="w-full">
@@ -81,8 +112,10 @@ export const LoginPage = () => {
                     </div>
                 </CardContent>
             </Card>
-            <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-                Haciendo clic aqu&iacute;, aceptas nuestros <a href="#">T&eacute;rminos de Servicio</a> y <a href="#">Pol&iacute;tica de Privacidad</a>.
+            <div
+                className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+                Haciendo clic aqu&iacute;, aceptas nuestros <a href="#">T&eacute;rminos de Servicio</a> y <a
+                    href="#">Pol&iacute;tica de Privacidad</a>.
             </div>
         </div>
     )
