@@ -61,7 +61,7 @@ export const AdminProductsPage = () => {
                             </TableCell>
                             <TableCell>{currencyFormatter(product.price)}</TableCell>
                             <TableCell>{product.gender}</TableCell>
-                            <TableCell>{product.stock} stock</TableCell>
+                            <TableCell>{product.slug} stock</TableCell>
                             <TableCell>{product.sizes.join(', ')}</TableCell>
                             <TableCell className="text-right">
                                 <Link to={`/admin/products/${product.id}`}>

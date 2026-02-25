@@ -21,7 +21,7 @@ export const getProductByIdAction = async (id: string): Promise<Product> => {
 
     const images = data.images.map(image => {
         if (image.startsWith('http')) return image;
-        return `${import.meta.env.VITE_API_URL}/files/products/${image}`;
+        return `${import.meta.env.VITE_API_URL}/files/product/${image}`;
     });
 
     return { ...data, images };
