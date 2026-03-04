@@ -1,7 +1,7 @@
 import { AdminTitle } from "@/admin/components/AdminTitle";
 import { Button } from "@/components/ui/button";
 import type { Product, Size } from "@/interfaces/product.interface";
-import { Plus, SaveAll, Tag, Upload, X } from "lucide-react";
+import { SaveAll, Tag, Upload, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
@@ -11,11 +11,14 @@ interface Props {
     title: string;
     subtitle: string;
     product: Product;
+
+    onSubmit: (productLike: Partial<Product>) => Promise<void>;
+    isPending?: boolean;
 }
 
 const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
-export const ProductForm = ({ title, subtitle, product }: Props) => {
+export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: Props) => {
     console.log(product);
     const [dragActive, setDragActive] = useState(false);
 
@@ -77,24 +80,19 @@ export const ProductForm = ({ title, subtitle, product }: Props) => {
         console.log(files);
     };
 
-    // TODO: Implement form submission logic {REMOVE}
-    const onSubmit = (productLike: Product) => {
-        console.log(productLike);
-    };
-
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="flex justify-between items-center">
                 <AdminTitle title={title} subtitle={subtitle} />
                 <div className="flex justify-end mb-10 gap-4">
-                    <Button variant="outline">
+                    <Button type="button" variant="outline">
                         <Link to="/admin/products" className="flex items-center gap-2">
                             <X className="w-4 h-4" />
                             Cancelar
                         </Link>
                     </Button>
 
-                    <Button>
+                    <Button type="submit" disabled={isPending} className="flex items-center gap-2">
                         <SaveAll className="w-4 h-4" />
                         Guardar cambios
                     </Button>
