@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import type { Product, Size } from "@/interfaces/product.interface";
 import { SaveAll, Tag, Upload, X } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { cn } from "@/lib/utils";
 
@@ -12,27 +12,41 @@ interface Props {
     subtitle: string;
     product: Product;
 
-    onSubmit: (productLike: Partial<Product>) => Promise<void>;
+    onSubmit: (productLike: Partial<Product> & { files?: File[] }) => Promise<void>;
     isPending?: boolean;
 }
 
 const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
+interface FormInputs extends Product {
+    files?: File[];
+}
+
 export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: Props) => {
-    console.log(product);
+    // console.log(product);
     const [dragActive, setDragActive] = useState(false);
 
     const newTag = useRef<HTMLInputElement>(null);
 
-    const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        getValues,
+        setValue,
+        watch
+    } = useForm<FormInputs>({
         defaultValues: product
     });
 
-    const [files, setFiles] = useState<File[]>([]);
+    useEffect(() => {
+        setValue('files', []) // Inicializamos el campo de archivos como un array vacío;
+    }, [product]);
 
     const selectedSizes = watch('sizes');
     const selectedTags = watch('tags');
     const currentStock = watch('stock');
+    const currentFiles = watch('files') || [];
 
     const addTag = () => {
         if (newTag.current && newTag.current.value.trim()) {
@@ -74,14 +88,14 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
         e.stopPropagation();
         setDragActive(false);
         const files = e.dataTransfer.files;
-        if(!files) return;
-        setFiles( prev => [...prev, ...Array.from(files)]);
+        if (!files) return;
+        setValue('files', [...(getValues('files') || []), ...Array.from(files)]);
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
-        if(!files) return;
-        setFiles( prev => [...prev, ...Array.from(files)]);
+        if (!files) return;
+        setValue('files', [...(getValues('files') || []), ...Array.from(files)]);
     };
 
     return (
@@ -310,7 +324,7 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                         // onChange={(e) => setNewTag(e.target.value)}
                                         // onKeyDown={(e) => e.key === 'Enter' && addTag()}
                                         ref={newTag}
-                                        onKeyDown={(e)=>{
+                                        onKeyDown={(e) => {
                                             if (e.key === 'Enter' || e.key === ' ' || e.key === ',') {
                                                 e.preventDefault();
                                                 addTag();
@@ -396,13 +410,13 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                 </div>
                             </div>
                             {/* Images to load */}
-                            <div className={cn("mt-6 space-y-3", { hidden: files.length === 0 })}>
+                            <div className={cn("mt-6 space-y-3", { hidden: currentFiles.length === 0 })}>
                                 <h3 className="text-sm font-medium text-slate-700">
                                     Imágenes a cargar
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {
-                                        files.map((file, index) => (
+                                        currentFiles?.map((file, index) => (
                                             <div key={index} className="relative group">
                                                 <div className="aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
                                                     <img
@@ -414,7 +428,7 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                             </div>
                                         ))
                                     }
-                                    {files.length === 0 && (
+                                    {currentFiles.length === 0 && (
                                         <p className="text-sm text-slate-500">
                                             No hay nuevas imágenes seleccionadas.
                                         </p>
