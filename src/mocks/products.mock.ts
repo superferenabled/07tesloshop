@@ -55,7 +55,7 @@ export const products: Product[] = [
         image: whiteCap,
         category: "Accesorios",
         description: "Gorra ajustable con logo Tesla bordado en alta calidad.",
-        sizes: ["Único"],
+        sizes: ["M", "L"],
         colors: ["Blanco", "Negro", "Gris"]
     },
     {
@@ -65,7 +65,7 @@ export const products: Product[] = [
         image: blackBackpack,
         category: "Accesorios",
         description: "Mochila minimalista con compartimentos organizados y diseño ergonómico.",
-        sizes: ["Único"],
+        sizes: ["M", "L"],
         colors: ["Negro", "Gris"]
     },
     {

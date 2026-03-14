@@ -3,7 +3,6 @@ import type { User } from "@/interfaces/user.interface.ts";
 import { loginAction } from '../actions/login.action';
 import { checkAuthAction } from '../actions/check-auth.action';
 import { registerAction } from '../actions/register.action';
-import { FocusScreen } from '../../../../../04-hooks-app/src/04useRef/FocusScreen';
 
 type AuthState = {
     // properties

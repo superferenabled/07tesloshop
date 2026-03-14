@@ -36,7 +36,7 @@ export const createUpdateProductAction = async (productLike: Partial<Product> & 
     });
 
     return {
-        ...data, images: data.images.map(image => {
+        ...data, images: (data.images || []).map(image => {
             if (image.includes('http')) return image;
             return `${import.meta.env.VITE_API_URL}/files/product/${image}`;
         })

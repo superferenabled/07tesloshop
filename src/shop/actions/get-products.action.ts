@@ -28,9 +28,9 @@ export const getProductsAction = async (options: Options) => {
     });
     const productsWithImageUrl = data.products.map(product => ({
         ...product,
-        images: product.images.map(
+        images: product.images? product.images.map(
             (image) => `${import.meta.env.VITE_API_URL}/files/product/${image}`
-        )
+        ): []
     }));
 
     return {

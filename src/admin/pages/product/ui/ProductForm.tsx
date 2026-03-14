@@ -36,21 +36,27 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
         setValue,
         watch
     } = useForm<FormInputs>({
-        defaultValues: product
+        defaultValues: {
+            ...product,
+            sizes: product.sizes || [],
+            tags: product.tags || [],
+            images: product.images || []
+        }
     });
 
     useEffect(() => {
         setValue('files', []) // Inicializamos el campo de archivos como un array vacío;
     }, [product]);
 
-    const selectedSizes = watch('sizes');
-    const selectedTags = watch('tags');
-    const currentStock = watch('stock');
+    const selectedSizes = watch('sizes') || [];
+    const selectedTags = watch('tags') || [];
+    const currentStock = watch('stock') || 0;
     const currentFiles = watch('files') || [];
 
     const addTag = () => {
         if (newTag.current && newTag.current.value.trim()) {
-            const tagsSet = new Set(getValues('tags'));
+            const currentTags = getValues('tags') || [];
+            const tagsSet = new Set(currentTags);
             tagsSet.add(newTag.current.value.trim());
             setValue('tags', Array.from(tagsSet));
             newTag.current.value = '';
@@ -58,18 +64,19 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
     };
 
     const removeTag = (tagToRemove: string) => {
-        const currentTags = getValues('tags');
+        const currentTags = getValues('tags') || [];
         setValue('tags', currentTags.filter((tag) => tag !== tagToRemove));
     };
 
     const addSize = (size: Size) => {
-        const sizeSet = new Set(getValues('sizes'));
+        const currentSizes = getValues('sizes') || [];
+        const sizeSet = new Set(currentSizes);
         sizeSet.add(size);
         setValue('sizes', Array.from(sizeSet));
     };
 
     const removeSize = (sizeToRemove: Size) => {
-        const currentSizes = getValues('sizes');
+        const currentSizes = getValues('sizes') || [];
         setValue('sizes', currentSizes.filter((size) => size !== sizeToRemove));
     };
 
@@ -187,7 +194,7 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                     </label>
                                     <input
                                         type="text"
-                                        {...register('slug', { required: true, validate: (value) => !/\s/.test(value) || "El slug no puede contener espacios" })}
+                                        {...register('slug', { required: true, validate: (value) => value && !/\s/.test(value) || "El slug no puede contener espacios" })}
                                         className={cn("w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200", { 'border-red-500': errors.slug })}
                                         placeholder="Slug del producto"
                                     />
@@ -276,12 +283,12 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                             type="button"
                                             key={size}
                                             onClick={() => addSize(size)}
-                                            disabled={getValues('sizes').includes(size)}
+                                            disabled={(getValues('sizes') || []).includes(size)}
                                             className={
                                                 cn("px-3 py-1 rounded-full text-sm font-medium transition-all duration-200",
                                                     {
-                                                        'bg-slate-100 text-slate-400 cursor-not-allowed': getValues('sizes').includes(size),
-                                                        'bg-slate-200 text-slate-700 hover:bg-slate-300 cursor-pointer': !getValues('sizes').includes(size)
+                                                        'bg-slate-100 text-slate-400 cursor-not-allowed': (getValues('sizes') || []).includes(size),
+                                                        'bg-slate-200 text-slate-700 hover:bg-slate-300 cursor-pointer': !(getValues('sizes') || []).includes(size)
                                                     }
                                                 )}
                                         >
@@ -390,7 +397,7 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                     Imágenes actuales
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {product.images.map((image, index) => (
+                                    {(product.images || []).map((image, index) => (
                                         <div key={index} className="relative group">
                                             <div className="aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
                                                 <img
@@ -478,7 +485,7 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                         Imágenes
                                     </span>
                                     <span className="text-sm text-slate-600">
-                                        {product.images.length} imágenes
+                                        {product.images && product.images.length} imágenes
                                     </span>
                                 </div>
 
@@ -487,7 +494,7 @@ export const ProductForm = ({ title, subtitle, product, onSubmit, isPending }: P
                                         Tallas disponibles
                                     </span>
                                     <span className="text-sm text-slate-600">
-                                        {selectedSizes.length} tallas
+                                        {selectedSizes && selectedSizes.length} tallas
                                     </span>
                                 </div>
                             </div>

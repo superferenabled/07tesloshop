@@ -100,7 +100,7 @@ export const ProductsGrid = ({products}: Props) => {
                                     id={product.id}
                                     name={product.title}
                                     price={product.price}
-                                    image={product.images[0] || ''}
+                                    image={product.images ? product.images[0] || '' : ''}
                                     category={product.gender}
                                     sizes={product.sizes}
                                 />

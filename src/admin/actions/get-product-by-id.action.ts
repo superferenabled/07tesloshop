@@ -19,7 +19,7 @@ export const getProductByIdAction = async (id: string): Promise<Product> => {
     }
     const { data } = await tesloApi.get<Product>(`/products/${id}`);
 
-    const images = data.images.map(image => {
+    const images = (data.images || []).map(image => {
         if (image.startsWith('http')) return image;
         return `${import.meta.env.VITE_API_URL}/files/product/${image}`;
     });

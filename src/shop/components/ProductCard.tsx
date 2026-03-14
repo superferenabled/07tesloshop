@@ -3,12 +3,12 @@ import {Card, CardContent} from "@/components/ui/card";
 import type {Size} from "@/interfaces/product.interface.ts";
 
 interface ProductCardProps {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
-    sizes: Size[]
+    id?: string;
+    name?: string;
+    price?: number;
+    image?: string;
+    category?: string;
+    sizes?: Size[]
 }
 
 const ProductCard = ({name, price, image, category, sizes}: ProductCardProps) => {
@@ -28,7 +28,7 @@ const ProductCard = ({name, price, image, category, sizes}: ProductCardProps) =>
                     <div className="space-y-1">
                         <h3 className="font-medium text-sm tracking-tight">{name}</h3>
                         <p className="text-xs text-muted-foreground uppercase">{category} - <span
-                            className='font-bold'>{sizes.join(', ')}</span></p>
+                            className='font-bold'>{sizes && sizes.join(', ')}</span></p>
                     </div>
 
                     <div className="flex items-center justify-between">
